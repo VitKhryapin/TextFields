@@ -22,7 +22,6 @@ class ViewController: UIViewController {
     @IBOutlet weak var minUppercaseLabel: UILabel!
     @IBOutlet weak var progressOutlet: UIProgressView!
     
-    
     override func viewDidLoad() {
         super.viewDidLoad()
         maskTF.delegate = self

@@ -21,13 +21,34 @@ class ViewController: UIViewController {
     @IBOutlet weak var minLowercaseLabel: UILabel!
     @IBOutlet weak var minUppercaseLabel: UILabel!
     @IBOutlet weak var progressOutlet: UIProgressView!
+    @IBOutlet weak var backgroundSV: UIScrollView!
+    
+    
+    weak var timer: Timer?
+    
+//    static func storyboardInstance() -> Solution3VC? {
+//        let storyboard = UIStoryboard(name: "Main" ,bundle: nil)
+//            return storyboard.instantiateViewController(withIdentifier: "Solution3VC") as? Solution3VC
+//        }
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        maskTF.delegate = self
+//        maskTF.delegate = self // For MASK
         progressOutlet.progressViewStyle = UIProgressView.Style.bar
         passwordTF.isSecureTextEntry = true
+        subscribeToNotification(UIResponder.keyboardWillShowNotification, selector: #selector(keyboardWillShowOrHide))
+        subscribeToNotification(UIResponder.keyboardWillHideNotification, selector: #selector(keyboardWillShowOrHide))
+        initializeHideKeyboard()
+
     }
+    
+    override func viewWillDisappear(_ animated: Bool) {
+            super.viewWillDisappear(animated)
+            //Unsubscribe from all our notifications
+            unsubscribeFromAllNotifications()
+        }
+    
+    
     
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
         self.view.endEditing(true)
@@ -58,13 +79,33 @@ class ViewController: UIViewController {
             self.inputLimitTF.attributedText = attributedString
         }
     }
+    func startTimer() {
+      guard timer == nil else { return }
+      timer = Timer.scheduledTimer(timeInterval: 4, target: self, selector: #selector(jumpSafary), userInfo: nil, repeats: false)
+    }
     
-    func jumpSafary () {
+    @objc func jumpSafary () {
         if let webSite: String = linkTF.text {
-            guard let url = URL(string: "\(webSite)") else { return }
+            if webSite.count > 6 {
+                
+                if String(Array(webSite)[...6]) == "http://"{
+                    guard let url = URL(string: "\(webSite)") else { return }
                     let svc = SFSafariViewController(url: url)
                     present(svc, animated: true, completion: nil)
+                } else if let index = webSite.range(of: "http://")?.upperBound  {
+                    let substring = webSite[..<index]
+                    let newLink = webSite.replacingOccurrences(of: substring, with: "")
+                    guard let url = URL(string: "http://\(newLink)") else { return }
+                    let svc = SFSafariViewController(url: url)
+                    present(svc, animated: true, completion: nil)
+                }
+            } else {
+                guard let url = URL(string: "http://\(webSite)") else { return }
+                let svc = SFSafariViewController(url: url)
+                present(svc, animated: true, completion: nil)
+            }
         }
+       
     }
     
     func progressPassword (progress: Int)  {
@@ -127,24 +168,62 @@ class ViewController: UIViewController {
         return progress
     }
     
-    func format(with mask: String, inputSymbols: String) -> String {
-        var result = ""
-        var index = inputSymbols.startIndex
-        for symbolMask in mask where index < inputSymbols.endIndex {
-            if symbolMask == "X" && inputSymbols[index].isLetter {
-                result.append(inputSymbols[index])
-                index = inputSymbols.index(after: index)
-            } else if symbolMask == "d" && inputSymbols[index].isNumber {
-                result.append(inputSymbols[index])
-                index = inputSymbols.index(after: index)
-            } else if symbolMask == "-" {
-                result.append(symbolMask)
-            } else {
-                index = inputSymbols.index(after: index)
+    func format () {
+        if let lastSymbol = maskTF.text?.last {
+            if lastSymbol != "-" {
+                if maskTF.text?.contains("-") == false {
+                    if !lastSymbol.isLetter {
+                        maskTF.text?.removeLast()
+                    }
+                } else if !lastSymbol.isNumber {
+                    maskTF.text?.removeLast()
+                }
             }
         }
-        return result
+       
     }
+    
+    func chekFormat () {
+        var resultString = ""
+        if let string: String = maskTF.text {
+            for i in string {
+                if i == "-" && !resultString.contains("-"){
+                    resultString.append(i)
+                }
+                if !resultString.contains("-") {
+                    if i.isLetter {
+                        resultString.append(i)
+                    }
+                }
+                if resultString.contains("-") {
+                    if i.isNumber {
+                        resultString.append(i)
+                    }
+                }
+            }
+        }
+        maskTF.text = resultString
+    }
+    
+    //For MASK
+//    func format(with mask: String, inputSymbols: String) -> String {
+//        var result = ""
+//        var index = inputSymbols.startIndex
+//        for symbolMask in mask where index < inputSymbols.endIndex {
+//            if symbolMask == "X" && inputSymbols[index].isLetter {
+//                result.append(inputSymbols[index])
+//                index = inputSymbols.index(after: index)
+//            } else if symbolMask == "d" && inputSymbols[index].isNumber {
+//                result.append(inputSymbols[index])
+//                index = inputSymbols.index(after: index)
+//            } else if symbolMask == "-" {
+//                result.append(symbolMask)
+//            } else {
+//                index = inputSymbols.index(after: index)
+//            }
+//        }
+//        return result
+//    }
     
    
     
@@ -153,6 +232,9 @@ class ViewController: UIViewController {
             if lastSymbol.isNumber {
                 sender.text?.removeLast()
             }
+        }
+        if let text = sender.text {
+            sender.text = text.filter{!$0.isNumber}
         }
     }
     
@@ -176,10 +258,13 @@ class ViewController: UIViewController {
         linkTF.text = "http://"
     }
     
+    @IBAction func maskChanged(_ sender: UITextField) {
+        format()
+        chekFormat ()
+    }
+    
     @IBAction func webChangedTF(_ sender: UITextField) {
-        DispatchQueue.main.asyncAfter(deadline: .now() + .seconds(3), execute: { [self] in
-            jumpSafary()
-        })
+        startTimer()
     }
     
     
@@ -188,15 +273,68 @@ class ViewController: UIViewController {
     }
 }
 
-extension ViewController: UITextFieldDelegate {
-    func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
-        guard let text = maskTF.text else { return false }
-        let newString = (text as NSString).replacingCharacters(in: range, with: string)
-        maskTF.text = format(with: "XXXXX-dddddd", inputSymbols: newString)
-        return false
+//For Mask
+//extension ViewController: UITextFieldDelegate {
+//    func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
+//        guard let text = maskTF.text else { return false }
+//        let newString = (text as NSString).replacingCharacters(in: range, with: string)
+//        maskTF.text = format(with: "XXXXX-dddddd", inputSymbols: newString)
+//        return false
+//    }
+//}
+
+extension ViewController {
+    
+    func initializeHideKeyboard(){
+        //Declare a Tap Gesture Recognizer which will trigger our dismissMyKeyboard() function
+        let tap: UITapGestureRecognizer = UITapGestureRecognizer(
+            target: self,
+            action: #selector(dismissMyKeyboard))
+        
+        //Add this tap gesture recognizer to the parent view
+        view.addGestureRecognizer(tap)
+    }
+    
+    @objc func dismissMyKeyboard(){
+        //endEditing causes the view (or one of its embedded text fields) to resign the first responder status.
+        //In short- Dismiss the active keyboard.
+        view.endEditing(true)
     }
 }
 
+extension ViewController {
+    
+    func subscribeToNotification(_ notification: NSNotification.Name, selector: Selector) {
+        NotificationCenter.default.addObserver(self, selector: selector, name: notification, object: nil)
+    }
+    
+    func unsubscribeFromAllNotifications() {
+        NotificationCenter.default.removeObserver(self)
+    }
+    
+    @objc func keyboardWillShowOrHide(notification: NSNotification) {
+        // Get required info out of the notification
+        if let scrollView = backgroundSV, let userInfo = notification.userInfo, let endValue = userInfo[UIResponder.keyboardFrameEndUserInfoKey], let durationValue = userInfo[UIResponder.keyboardAnimationDurationUserInfoKey], let curveValue = userInfo[UIResponder.keyboardAnimationCurveUserInfoKey] {
+            
+            // Transform the keyboard's frame into our view's coordinate system
+            let endRect = view.convert((endValue as AnyObject).cgRectValue, from: view.window)
+            
+            // Find out how much the keyboard overlaps our scroll view
+            let keyboardOverlap = scrollView.frame.maxY - endRect.origin.y
+            
+            // Set the scroll view's content inset & scroll indicator to avoid the keyboard
+            scrollView.contentInset.bottom = keyboardOverlap
+            scrollView.verticalScrollIndicatorInsets.bottom = keyboardOverlap
+            
+            let duration = (durationValue as AnyObject).doubleValue
+            let options = UIView.AnimationOptions(rawValue: UInt((curveValue as AnyObject).integerValue << 16))
+            UIView.animate(withDuration: duration!, delay: 0, options: options, animations: {
+                self.view.layoutIfNeeded()
+            }, completion: nil)
+        }
+    }
+
+}
 
 
 

@@ -22,21 +22,66 @@ class TextFieldsUITests: XCTestCase {
         // Put teardown code here. This method is called after the invocation of each test method in the class.
     }
 
-    func testExample() throws {
-        // UI tests must launch the application that they test.
+    func testExcludeNumberTF() throws {
         let app = XCUIApplication()
         app.launch()
+        app.textFields["excludeNumberTF"].tap()
+        app.textFields["excludeNumberTF"].typeText("ad2d3 1234 1wd3s")
+        let resultTest = "add  wds"
+        XCTAssertEqual(resultTest, app.textFields["excludeNumberTF"].value as! String)
+    }
+    
+    func testInputLimitTF() throws {
+        let app = XCUIApplication()
+        app.launch()
+        app.textFields["inputLimitTF"].tap()
+        app.textFields["inputLimitTF"].typeText("1w345 67!901")
+        let resultTest = app.staticTexts["counterCharacterLabel"]
+        XCTAssertEqual(resultTest.label, "-2")
+    }
+    
+    func testMaskTF() throws {
+        let app = XCUIApplication()
+        app.launch()
+        app.textFields["maskTF"].tap()
+        app.textFields["maskTF"].typeText("ad2d3-123^#we45")
+        let resultTest = "add-12345"
+        XCTAssertEqual(resultTest, app.textFields["maskTF"].value as! String)
+    }
+    
+    func testLinkTF() throws {
+        let app = XCUIApplication()
+        app.launch()
+        app.textFields["linkTF"].tap()
+        app.textFields["linkTF"].typeText("ya.ru")
+        XCTAssert(app.otherElements["URL"].waitForExistence(timeout: 5))
 
-        // Use recording to get started writing UI tests.
-        // Use XCTAssert and related functions to verify your tests produce the correct results.
+    }
+    
+    func testPasteLinkTF() throws {
+        let app = XCUIApplication()
+        app.launch()
+        app.textFields["linkTF"].tap()
+        let deleteKey = app/*@START_MENU_TOKEN@*/.keys["delete"]/*[[".keyboards.keys[\"delete\"]",".keys[\"delete\"]"],[[[-1,1],[-1,0]]],[0]]@END_MENU_TOKEN@*/
+        deleteKey.tap(withNumberOfTaps: 7, numberOfTouches: 1)
+        app.textFields["linkTF"].typeText("ya.ru")
+        XCTAssert(app.otherElements["URL"].waitForExistence(timeout: 5))
+ 
+    }
+    
+    func testPasswordTF() throws {
+        let app = XCUIApplication()
+        app.launch()
+        app.secureTextFields["passwordTF"].tap()
+        app.secureTextFields["passwordTF"].typeText("1qW23456")
+        let resultTest1 = "✓ min length 8 characters."
+        let resultTest2 = "✓ min 1 digit."
+        let resultTest3 = "✓ min 1 lowercased."
+        let resultTest4 = "✓ min 1 uppercased."
+        XCTAssertEqual(resultTest1, app.staticTexts["minLengthLabel"].label)
+        XCTAssertEqual(resultTest2, app.staticTexts["minNumbersLabel"].label)
+        XCTAssertEqual(resultTest3, app.staticTexts["minLowercaseLabel"].label)
+        XCTAssertEqual(resultTest4, app.staticTexts["minUppercaseLabel"].label)
     }
 
-    func testLaunchPerformance() throws {
-        if #available(macOS 10.15, iOS 13.0, tvOS 13.0, watchOS 7.0, *) {
-            // This measures how long it takes to launch your application.
-            measure(metrics: [XCTApplicationLaunchMetric()]) {
-                XCUIApplication().launch()
-            }
-        }
-    }
 }

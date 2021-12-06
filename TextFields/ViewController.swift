@@ -36,7 +36,17 @@ class ViewController: UIViewController {
         subscribeToNotification(UIResponder.keyboardWillShowNotification, selector: #selector(keyboardWillShowOrHide))
         subscribeToNotification(UIResponder.keyboardWillHideNotification, selector: #selector(keyboardWillShowOrHide))
         initializeHideKeyboard()
-
+        
+        excludeNumberTF.accessibilityIdentifier = "excludeNumberTF"
+        inputLimitTF.accessibilityIdentifier = "inputLimitTF"
+        counterCharacterLabel.accessibilityIdentifier = "counterCharacterLabel"
+        maskTF.accessibilityIdentifier = "maskTF"
+        linkTF.accessibilityIdentifier = "linkTF"
+        passwordTF.accessibilityIdentifier = "passwordTF"
+        minLengthLabel.accessibilityIdentifier = "minLengthLabel"
+        minNumbersLabel.accessibilityIdentifier = "minNumbersLabel"
+        minLowercaseLabel.accessibilityIdentifier = "minLowercaseLabel"
+        minUppercaseLabel.accessibilityIdentifier = "minUppercaseLabel"
     }
     
     override func viewWillDisappear(_ animated: Bool) {
@@ -101,7 +111,7 @@ class ViewController: UIViewController {
                 present(svc, animated: true, completion: nil)
             }
         }
-       
+      
     }
     
     func progressPassword (progress: Int)  {

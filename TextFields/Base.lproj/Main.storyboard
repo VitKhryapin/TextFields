@@ -107,9 +107,10 @@
                                                 <nil key="textColor"/>
                                                 <nil key="highlightedColor"/>
                                             </label>
-                                            <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="www.example.com" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="ekx-u2-P7g">
+                                            <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="www.example.com" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="ekx-u2-P7g">
                                                 <rect key="frame" x="0.0" y="216.66666666666663" width="383" height="34"/>
                                                 <color key="tintColor" systemColor="systemBlueColor"/>
+                                                <nil key="textColor"/>
                                                 <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                                 <textInputTraits key="textInputTraits"/>
                                                 <connections>
@@ -212,7 +213,7 @@
                         <outlet property="counterCharacterLabel" destination="DfC-iD-ak3" id="rln-8G-WQe"/>
                         <outlet property="excludeNumberTF" destination="QgE-UZ-Xct" id="ibG-ey-0iT"/>
                         <outlet property="inputLimitTF" destination="5Ik-dK-1xX" id="kBl-hQ-PrI"/>
-                        <outlet property="linkTF" destination="ekx-u2-P7g" id="Gi3-3d-a0z"/>
+                        <outlet property="linkTF" destination="ekx-u2-P7g" id="5bo-ww-Qp5"/>
                         <outlet property="maskTF" destination="yp7-Jm-mVY" id="O23-By-3V4"/>
                         <outlet property="minLengthLabel" destination="FUc-Vb-KMd" id="VkU-Du-KMs"/>
                         <outlet property="minLowercaseLabel" destination="yoK-JY-30d" id="XFB-1f-mLz"/>

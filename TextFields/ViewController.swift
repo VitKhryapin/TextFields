@@ -8,7 +8,7 @@
 import UIKit
 import SafariServices
 
-class ViewController: UIViewController {
+class ViewController: UIViewController, UITextFieldDelegate {
     
     @IBOutlet weak var excludeNumberTF: UITextField!
     @IBOutlet weak var inputLimitTF: UITextField!
@@ -30,13 +30,16 @@ class ViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-//        maskTF.delegate = self // For MASK
         progressOutlet.progressViewStyle = UIProgressView.Style.bar
         passwordTF.isSecureTextEntry = true
         subscribeToNotification(UIResponder.keyboardWillShowNotification, selector: #selector(keyboardWillShowOrHide))
         subscribeToNotification(UIResponder.keyboardWillHideNotification, selector: #selector(keyboardWillShowOrHide))
         initializeHideKeyboard()
-        
+        identifier()
+        linkTF.delegate = self
+    }
+    
+    func identifier () {
         excludeNumberTF.accessibilityIdentifier = "excludeNumberTF"
         inputLimitTF.accessibilityIdentifier = "inputLimitTF"
         counterCharacterLabel.accessibilityIdentifier = "counterCharacterLabel"
@@ -85,35 +88,22 @@ class ViewController: UIViewController {
             self.inputLimitTF.attributedText = attributedString
         }
     }
+    
     func startTimer() {
-      guard timer == nil else { return }
-      timer = Timer.scheduledTimer(timeInterval: 4, target: self, selector: #selector(jumpSafary), userInfo: nil, repeats: false)
+        timer?.invalidate()
+        timer = Timer.scheduledTimer(timeInterval: 4, target: self, selector: #selector(jumpSafary), userInfo: nil, repeats: false)
     }
     
     @objc func jumpSafary () {
         if let webSite: String = linkTF.text {
-            if webSite.count > 6 {
-                
-                if String(Array(webSite)[...6]) == "http://"{
-                    guard let url = URL(string: "\(webSite)") else { return }
-                    let svc = SFSafariViewController(url: url)
-                    present(svc, animated: true, completion: nil)
-                } else if let index = webSite.range(of: "http://")?.upperBound  {
-                    let substring = webSite[..<index]
-                    let newLink = webSite.replacingOccurrences(of: substring, with: "")
-                    guard let url = URL(string: "http://\(newLink)") else { return }
-                    let svc = SFSafariViewController(url: url)
-                    present(svc, animated: true, completion: nil)
-                }
-            } else {
-                guard let url = URL(string: "http://\(webSite)") else { return }
-                let svc = SFSafariViewController(url: url)
-                present(svc, animated: true, completion: nil)
-            }
+            guard let url = URL(string: "\(webSite)") else { return }
+            let svc = SFSafariViewController(url: url)
+            present(svc, animated: true, completion: nil)
         }
-      
     }
     
+   
+   
     func progressPassword (progress: Int)  {
         if progress == 0 {
             progressOutlet.progress = 0
@@ -211,26 +201,6 @@ class ViewController: UIViewController {
         maskTF.text = resultString
     }
     
-    //For MASK
-//    func format(with mask: String, inputSymbols: String) -> String {
-//        var result = ""
-//        var index = inputSymbols.startIndex
-//        for symbolMask in mask where index < inputSymbols.endIndex {
-//            if symbolMask == "X" && inputSymbols[index].isLetter {
-//                result.append(inputSymbols[index])
-//                index = inputSymbols.index(after: index)
-//            } else if symbolMask == "d" && inputSymbols[index].isNumber {
-//                result.append(inputSymbols[index])
-//                index = inputSymbols.index(after: index)
-//            } else if symbolMask == "-" {
-//                result.append(symbolMask)
-//            } else {
-//                index = inputSymbols.index(after: index)
-//            }
-//        }
-//        return result
-//    }
-    
    
     
     @IBAction func changedExcludeNumberTF(_ sender: UITextField) {
@@ -261,16 +231,38 @@ class ViewController: UIViewController {
     }
     
     @IBAction func defaultTextInTF(_ sender: UITextField) {
-        linkTF.text = "http://"
+       linkTF.text = "https://"
     }
     
     @IBAction func maskChanged(_ sender: UITextField) {
         format()
         chekFormat ()
     }
+   
     
     @IBAction func webChangedTF(_ sender: UITextField) {
-        startTimer()
+        
+        if let webSite: String = linkTF.text {
+            if webSite.hasPrefix("https://") || webSite.hasPrefix("http://") {
+        
+            } else
+            if webSite.contains(".") {
+                linkTF.text = "https://\(webSite)"
+                } else if linkTF.text!.count < 8  {
+                    linkTF.text = "https://"
+                }
+        }
+        
+        DispatchQueue.main.async{
+            let newPosition = self.linkTF.endOfDocument
+            self.linkTF.selectedTextRange = self.linkTF.textRange(from: newPosition, to: newPosition)
+           }
+        
+        if  linkTF.text!.count > 8 {
+            startTimer()
+        } else {
+            timer?.invalidate()
+        }
     }
     
     
@@ -279,15 +271,7 @@ class ViewController: UIViewController {
     }
 }
 
-//For Mask
-//extension ViewController: UITextFieldDelegate {
-//    func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
-//        guard let text = maskTF.text else { return false }
-//        let newString = (text as NSString).replacingCharacters(in: range, with: string)
-//        maskTF.text = format(with: "XXXXX-dddddd", inputSymbols: newString)
-//        return false
-//    }
-//}
+
 
 extension ViewController {
     
@@ -301,9 +285,6 @@ extension ViewController {
     @objc func dismissMyKeyboard(){
         view.endEditing(true)
     }
-}
-
-extension ViewController {
     
     func subscribeToNotification(_ notification: NSNotification.Name, selector: Selector) {
         NotificationCenter.default.addObserver(self, selector: selector, name: notification, object: nil)
@@ -312,6 +293,8 @@ extension ViewController {
     func unsubscribeFromAllNotifications() {
         NotificationCenter.default.removeObserver(self)
     }
+    
+    
     
     @objc func keyboardWillShowOrHide(notification: NSNotification) {
         if let scrollView = backgroundSV, let userInfo = notification.userInfo, let endValue = userInfo[UIResponder.keyboardFrameEndUserInfoKey], let durationValue = userInfo[UIResponder.keyboardAnimationDurationUserInfoKey], let curveValue = userInfo[UIResponder.keyboardAnimationCurveUserInfoKey] {
@@ -332,7 +315,6 @@ extension ViewController {
     }
 
 }
-
 
 
 

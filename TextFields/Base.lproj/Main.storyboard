@@ -55,13 +55,14 @@
                                                         </connections>
                                                     </textField>
                                                     <label contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" usesAttributedText="YES" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="DfC-iD-ak3">
-                                                        <rect key="frame" x="343" y="27" width="14.333333333333314" height="14"/>
+                                                        <rect key="frame" x="336" y="27" width="21" height="14"/>
                                                         <color key="backgroundColor" systemColor="secondarySystemGroupedBackgroundColor"/>
                                                         <accessibility key="accessibilityConfiguration">
                                                             <bool key="isElement" value="NO"/>
                                                         </accessibility>
                                                         <constraints>
                                                             <constraint firstAttribute="height" constant="14" id="IiO-qu-LXH"/>
+                                                            <constraint firstAttribute="width" relation="greaterThanOrEqual" constant="21" id="fci-iq-4av"/>
                                                         </constraints>
                                                         <attributedString key="attributedText">
                                                             <fragment content="10">
@@ -78,7 +79,7 @@
                                                 <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                                                 <constraints>
                                                     <constraint firstItem="DfC-iD-ak3" firstAttribute="top" secondItem="oRI-Wo-NTE" secondAttribute="top" constant="27" id="8aY-fa-ig6"/>
-                                                    <constraint firstItem="DfC-iD-ak3" firstAttribute="leading" secondItem="5Ik-dK-1xX" secondAttribute="trailing" priority="999" constant="-40" id="MBK-OS-h6W"/>
+                                                    <constraint firstItem="DfC-iD-ak3" firstAttribute="leading" secondItem="5Ik-dK-1xX" secondAttribute="trailing" priority="999" constant="-47" id="MBK-OS-h6W"/>
                                                     <constraint firstItem="5Ik-dK-1xX" firstAttribute="leading" secondItem="oRI-Wo-NTE" secondAttribute="leading" id="azw-c3-LSK"/>
                                                     <constraint firstAttribute="bottom" secondItem="DfC-iD-ak3" secondAttribute="bottom" constant="8.9999999999999858" id="ddf-Ec-IL3"/>
                                                     <constraint firstItem="5Ik-dK-1xX" firstAttribute="top" secondItem="oRI-Wo-NTE" secondAttribute="top" id="nuW-b9-hWZ"/>

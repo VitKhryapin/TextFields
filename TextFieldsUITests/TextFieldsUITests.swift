@@ -61,12 +61,11 @@ class TextFieldsUITests: XCTestCase {
     func testPasteLinkTF() throws {
         let app = XCUIApplication()
         app.launch()
-        app.textFields["linkTF"].tap()
-        let deleteKey = app/*@START_MENU_TOKEN@*/.keys["delete"]/*[[".keyboards.keys[\"delete\"]",".keys[\"delete\"]"],[[[-1,1],[-1,0]]],[0]]@END_MENU_TOKEN@*/
-        deleteKey.tap(withNumberOfTaps: 7, numberOfTouches: 1)
+        app.textFields["linkTF"].tap(withNumberOfTaps: 3, numberOfTouches: 1)
+        app/*@START_MENU_TOKEN@*/.staticTexts["Cut"]/*[[".menus",".menuItems[\"Cut\"].staticTexts[\"Cut\"]",".staticTexts[\"Cut\"]"],[[[-1,2],[-1,1],[-1,0,1]],[[-1,2],[-1,1]]],[0]]@END_MENU_TOKEN@*/.tap()
+        app.textFields["linkTF"].waitForExistence(timeout: 1)
         app.textFields["linkTF"].typeText("ya.ru")
         XCTAssert(app.otherElements["URL"].waitForExistence(timeout: 5))
- 
     }
     
     func testPasswordTF() throws {

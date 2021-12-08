@@ -23,10 +23,7 @@ class ViewController: UIViewController, UITextFieldDelegate {
     @IBOutlet weak var progressOutlet: UIProgressView!
     @IBOutlet weak var backgroundSV: UIScrollView!
     
-    
     weak var timer: Timer?
-    
-  
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -36,7 +33,7 @@ class ViewController: UIViewController, UITextFieldDelegate {
         subscribeToNotification(UIResponder.keyboardWillHideNotification, selector: #selector(keyboardWillShowOrHide))
         initializeHideKeyboard()
         identifier()
-        linkTF.delegate = self
+        
     }
     
     func identifier () {
@@ -53,9 +50,9 @@ class ViewController: UIViewController, UITextFieldDelegate {
     }
     
     override func viewWillDisappear(_ animated: Bool) {
-            super.viewWillDisappear(animated)
-            unsubscribeFromAllNotifications()
-        }
+        super.viewWillDisappear(animated)
+        unsubscribeFromAllNotifications()
+    }
     
     
     
@@ -82,11 +79,15 @@ class ViewController: UIViewController, UITextFieldDelegate {
     func redTextTF () {
         if let string: String = inputLimitTF.text {
             let redText = String(Array(string)[10...])
+            let blackText = String(Array(string)[...9])
             let range = (string as NSString).range(of: redText, options: .backwards)
+            let range2 = (string as NSString).range(of: blackText, options: .backwards)
             let attributedString = NSMutableAttributedString(string:string)
             attributedString.addAttribute(NSAttributedString.Key.foregroundColor, value: UIColor.red , range: range)
+            attributedString.addAttribute(NSAttributedString.Key.foregroundColor, value: UIColor.black , range: range2)
             self.inputLimitTF.attributedText = attributedString
         }
+        
     }
     
     func startTimer() {
@@ -102,8 +103,8 @@ class ViewController: UIViewController, UITextFieldDelegate {
         }
     }
     
-   
-   
+    
+    
     func progressPassword (progress: Int)  {
         if progress == 0 {
             progressOutlet.progress = 0
@@ -128,7 +129,7 @@ class ViewController: UIViewController, UITextFieldDelegate {
             if password.count > 7 {
                 minLengthLabel.text = "✓ min length 8 characters."
                 minLengthLabel.textColor = .systemGreen
-               progress += 1
+                progress += 1
             } else {
                 minLengthLabel.text = "- min length 8 characters."
                 minLengthLabel.textColor = .black
@@ -176,7 +177,7 @@ class ViewController: UIViewController, UITextFieldDelegate {
                 }
             }
         }
-       
+        
     }
     
     func chekFormat () {
@@ -201,7 +202,7 @@ class ViewController: UIViewController, UITextFieldDelegate {
         maskTF.text = resultString
     }
     
-   
+    
     
     @IBAction func changedExcludeNumberTF(_ sender: UITextField) {
         if let lastSymbol = sender.text?.last {
@@ -231,32 +232,32 @@ class ViewController: UIViewController, UITextFieldDelegate {
     }
     
     @IBAction func defaultTextInTF(_ sender: UITextField) {
-       linkTF.text = "https://"
+        linkTF.text = "https://"
     }
     
     @IBAction func maskChanged(_ sender: UITextField) {
         format()
         chekFormat ()
     }
-   
+    
     
     @IBAction func webChangedTF(_ sender: UITextField) {
         
         if let webSite: String = linkTF.text {
             if webSite.hasPrefix("https://") || webSite.hasPrefix("http://") {
-        
+                
             } else
             if webSite.contains(".") {
                 linkTF.text = "https://\(webSite)"
-                } else if linkTF.text!.count < 8  {
-                    linkTF.text = "https://"
-                }
+            } else if linkTF.text!.count < 8  {
+                linkTF.text = "https://"
+            }
         }
         
         DispatchQueue.main.async{
             let newPosition = self.linkTF.endOfDocument
             self.linkTF.selectedTextRange = self.linkTF.textRange(from: newPosition, to: newPosition)
-           }
+        }
         
         if  linkTF.text!.count > 8 {
             startTimer()
@@ -294,8 +295,6 @@ extension ViewController {
         NotificationCenter.default.removeObserver(self)
     }
     
-    
-    
     @objc func keyboardWillShowOrHide(notification: NSNotification) {
         if let scrollView = backgroundSV, let userInfo = notification.userInfo, let endValue = userInfo[UIResponder.keyboardFrameEndUserInfoKey], let durationValue = userInfo[UIResponder.keyboardAnimationDurationUserInfoKey], let curveValue = userInfo[UIResponder.keyboardAnimationCurveUserInfoKey] {
             
@@ -313,7 +312,7 @@ extension ViewController {
             }, completion: nil)
         }
     }
-
+    
 }
 
 

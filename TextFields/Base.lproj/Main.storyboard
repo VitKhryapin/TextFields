@@ -111,7 +111,6 @@
                                             <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="www.example.com" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="ekx-u2-P7g">
                                                 <rect key="frame" x="0.0" y="216.66666666666663" width="383" height="34"/>
                                                 <color key="tintColor" systemColor="systemBlueColor"/>
-                                                <nil key="textColor"/>
                                                 <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                                 <textInputTraits key="textInputTraits"/>
                                                 <connections>

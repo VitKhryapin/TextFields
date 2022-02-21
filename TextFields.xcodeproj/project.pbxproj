@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		FB16BD4E27C3CC8300338AB5 /* Preview.png in Resources */ = {isa = PBXBuildFile; fileRef = FB16BD4D27C3CC8300338AB5 /* Preview.png */; };
 		FB4D7DDC2754C15100E0C4FE /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB4D7DDB2754C15100E0C4FE /* AppDelegate.swift */; };
 		FB4D7DDE2754C15100E0C4FE /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB4D7DDD2754C15100E0C4FE /* SceneDelegate.swift */; };
 		FB4D7DE02754C15100E0C4FE /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB4D7DDF2754C15100E0C4FE /* ViewController.swift */; };
@@ -35,6 +36,7 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		FB16BD4D27C3CC8300338AB5 /* Preview.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Preview.png; sourceTree = SOURCE_ROOT; };
 		FB4D7DD82754C15100E0C4FE /* TextFields.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = TextFields.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		FB4D7DDB2754C15100E0C4FE /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		FB4D7DDD2754C15100E0C4FE /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -106,6 +108,7 @@
 				FB4D7DE42754C15200E0C4FE /* Assets.xcassets */,
 				FB4D7DE62754C15200E0C4FE /* LaunchScreen.storyboard */,
 				FB4D7DE92754C15200E0C4FE /* Info.plist */,
+				FB16BD4D27C3CC8300338AB5 /* Preview.png */,
 			);
 			path = TextFields;
 			sourceTree = "<group>";
@@ -231,6 +234,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				FB16BD4E27C3CC8300338AB5 /* Preview.png in Resources */,
 				FB4D7DE82754C15200E0C4FE /* LaunchScreen.storyboard in Resources */,
 				FB4D7DE52754C15200E0C4FE /* Assets.xcassets in Resources */,
 				FB4D7DE32754C15100E0C4FE /* Main.storyboard in Resources */,
